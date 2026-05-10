@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PetOlife — Every Pet Has a Story</title>
+  <meta name="description" content="PetOlife is building the world's first unified pet identity — one secure profile that connects parents, vets, shelters, and care providers across a pet's entire life." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/nav.css" />
+  <link rel="stylesheet" href="css/hero.css" />
+  <link rel="stylesheet" href="css/sections.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+
+  <!-- ── NAVIGATION ── -->
+  <nav id="navbar">
+    <div class="nav-logo">
+      <span class="paw">🐾</span>
+      <span class="brand-name">PetOlife</span>
+    </div>
+    <div class="nav-links">
+      <a href="#problem">The Problem</a>
+      <a href="#features">Features</a>
+      <a href="#how">How It Works</a>
+      <a href="#cta" class="nav-cta">Get Early Access</a>
+    </div>
+    <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu">☰</button>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#problem">The Problem</a>
+    <a href="#features">Features</a>
+    <a href="#how">How It Works</a>
+    <a href="#cta">Get Early Access</a>
+  </div>
+
+  <!-- ── HERO ── -->
+  <section class="hero" id="hero">
+    <div class="hero-bg"></div>
+
+    <div class="badge">
+      <div class="badge-dot"></div>
+      Now in Early Access
+    </div>
+
+    <p class="hero-eyebrow">Unified Pet Identity Platform</p>
+
+    <h1>Every pet deserves<br/>a <em>digital identity</em></h1>
+
+    <p class="hero-sub">
+      PetOlife is building the world's first unified pet identity — one secure profile that connects parents, vets, shelters, and care providers across a pet's entire life.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#cta" class="btn btn-primary">Create Your Pet's Profile →</a>
+      <a href="#problem" class="btn btn-secondary">See Why It Matters</a>
+    </div>
+
+    <div class="floating-cards" id="floatingCards">
+      <!-- Injected by js/pets.js -->
+    </div>
+  </section>
+
+  <!-- ── TRUST STRIP ── -->
+  <div class="trust-strip" id="trustStrip">
+    <!-- Injected by js/trust.js -->
+  </div>
+
+  <!-- ── PROBLEM ── -->
+  <section id="problem" class="section-alt">
+    <div class="section-inner">
+      <div class="problem-grid">
+        <div class="problem-text">
+          <p class="section-label reveal">The Problem</p>
+          <h2 class="reveal">Pet care is <em>fragmented</em></h2>
+          <p class="section-lead reveal">Your pet's records are scattered across notebooks, WhatsApp messages, old clinic files, and faded vaccination cards.</p>
+          <div class="chaos-cards" id="chaosCards">
+            <!-- Injected by js/problems.js -->
+          </div>
+        </div>
+        <div class="problem-stats reveal" id="statsBox">
+          <!-- Injected by js/stats.js -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FEATURES ── -->
+  <section id="features" class="section-default">
+    <div class="section-inner">
+      <p class="section-label reveal">The Solution</p>
+      <h2 class="reveal">One ID. A lifetime of <em>care</em>.</h2>
+      <p class="section-lead reveal">PetOlife creates a living digital profile for your pet — accessible to every trusted person in their care circle, always up to date, always secure.</p>
+      <div class="features-grid" id="featuresGrid">
+        <!-- Injected by js/features.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ID CARD DEMO ── -->
+  <section id="demo" class="section-demo">
+    <div class="section-inner">
+      <div class="id-demo-bg">
+        <div class="id-demo-inner">
+          <div class="id-demo-text">
+            <p class="section-label">Live Demo</p>
+            <h2>A pet's entire life,<br/>in one <em>card</em></h2>
+            <p class="section-lead">The PetOlife ID is the world's first standardized digital credential for pets — readable by any participating vet clinic in seconds.</p>
+            <a href="#cta" class="btn btn-amber" style="margin-top:1rem;">Create Your Pet's ID →</a>
+          </div>
+          <div class="id-card-wrapper" id="petIdCard">
+            <!-- Injected by js/idcard.js -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HOW IT WORKS ── -->
+  <section id="how" class="section-alt">
+    <div class="section-inner">
+      <p class="section-label reveal">How It Works</p>
+      <h2 class="reveal">Simple for owners,<br/><em>powerful</em> for vets</h2>
+      <p class="section-lead reveal">PetOlife is designed for zero friction on day one — no training required, no new hardware, no complex onboarding.</p>
+      <div class="how-steps" id="howSteps">
+        <!-- Injected by js/how.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TESTIMONIALS ── -->
+  <section class="section-default">
+    <div class="section-inner">
+      <p class="section-label reveal">Early Voices</p>
+      <h2 class="reveal">Pet parents & vets <em>both love it</em></h2>
+      <div class="testimonials-grid" id="testimonialsGrid">
+        <!-- Injected by js/testimonials.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ── -->
+  <section id="cta" class="cta-section">
+    <h2>Your pet's story<br/>starts <em>here</em></h2>
+    <p>Join thousands of pet parents giving their animals the digital identity they deserve. Free during early access.</p>
+    <div class="cta-actions">
+      <a href="#" class="btn btn-amber">Create a Free Pet Profile →</a>
+      <a href="#" class="btn btn-ghost">I'm a Vet — Join the Network</a>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div class="footer-top">
+      <div class="logo">🐾 PetOlife</div>
+      <div class="footer-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">For Vets</a>
+        <a href="#">Contact</a>
+        <a href="#">Blog</a>
+      </div>
+    </div>
+    <p class="footer-copy">© 2026 PetOlife Technologies Pvt. Ltd. · Built with love for pets and their people.</p>
+  </footer>
+
+  <!-- Scripts (order matters) -->
+  <script src="js/data.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
