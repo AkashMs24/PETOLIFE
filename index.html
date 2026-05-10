@@ -1,188 +1,941 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PetOlife — Every Pet Has a Story</title>
-  <meta name="description" content="PetOlife is building the world's first unified pet identity — one secure profile that connects parents, vets, shelters, and care providers across a pet's entire life." />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PetOlife — The Pet Identity Protocol</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c0e;
+    --surface: #111418;
+    --card: #161b22;
+    --accent: #e8c547;
+    --accent2: #4fd1a5;
+    --accent3: #f47c4e;
+    --text: #f0ede8;
+    --muted: #7a8594;
+    --border: rgba(255,255,255,0.07);
+  }
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-  <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/reset.css" />
-  <link rel="stylesheet" href="css/variables.css" />
-  <link rel="stylesheet" href="css/base.css" />
-  <link rel="stylesheet" href="css/nav.css" />
-  <link rel="stylesheet" href="css/hero.css" />
-  <link rel="stylesheet" href="css/sections.css" />
-  <link rel="stylesheet" href="css/components.css" />
-  <link rel="stylesheet" href="css/animations.css" />
-  <link rel="stylesheet" href="css/responsive.css" />
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 40px; height: 40px;
+    border: 1.5px solid var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.18s ease, width 0.3s, height 0.3s, opacity 0.3s;
+    opacity: 0.5;
+  }
+  body:hover .cursor { opacity: 1; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.4rem 4rem;
+    background: rgba(10,12,14,0.85);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+  }
+  .nav-logo span { color: var(--text); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-cta {
+    background: var(--accent);
+    color: #0a0c0e;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.65rem 1.6rem;
+    border: none;
+    cursor: none;
+    transition: transform 0.15s, box-shadow 0.2s;
+  }
+  .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 6px 30px rgba(232,197,71,0.35); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 10rem 4rem 6rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 70% 50%, rgba(79,209,165,0.06) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 40% at 20% 80%, rgba(232,197,71,0.05) 0%, transparent 60%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, transparent 75%);
+  }
+
+  .hero-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent2);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+  .hero-tag::before { content: '▸ '; color: var(--accent); }
+
+  .hero-h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.5rem, 7vw, 7rem);
+    font-weight: 900;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    max-width: 900px;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.35s forwards;
+  }
+  .hero-h1 em {
+    font-style: normal;
+    color: var(--accent);
+    position: relative;
+    display: inline-block;
+  }
+  .hero-h1 em::after {
+    content: '';
+    position: absolute; bottom: 6px; left: 0; right: 0; height: 3px;
+    background: var(--accent);
+    transform: scaleX(0); transform-origin: left;
+    animation: lineReveal 0.7s 1.1s forwards;
+  }
+
+  .hero-sub {
+    margin-top: 2rem;
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 560px;
+    line-height: 1.7;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.55s forwards;
+  }
+
+  .hero-actions {
+    display: flex; gap: 1.2rem; align-items: center;
+    margin-top: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.7s forwards;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #0a0c0e;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.04em;
+    padding: 1rem 2.4rem;
+    border: none; cursor: none;
+    transition: transform 0.15s, box-shadow 0.2s;
+  }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 40px rgba(232,197,71,0.4); }
+  .btn-ghost {
+    color: var(--text);
+    font-size: 0.88rem;
+    letter-spacing: 0.04em;
+    padding: 1rem 2rem;
+    border: 1px solid var(--border);
+    background: transparent; cursor: none;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+  .hero-stats {
+    display: flex; gap: 3.5rem;
+    margin-top: 5rem;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.9s forwards;
+  }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .stat-label {
+    font-size: 0.78rem;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+  }
+
+  /* MARQUEE */
+  .marquee-wrap {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    padding: 1rem 0;
+    background: var(--surface);
+  }
+  .marquee-track {
+    display: flex; gap: 4rem;
+    animation: marquee 22s linear infinite;
+    width: max-content;
+  }
+  .marquee-item {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    display: flex; align-items: center; gap: 1.5rem;
+  }
+  .marquee-item::after { content: '◆'; color: var(--accent); font-size: 0.5rem; }
+
+  /* PROBLEM */
+  .section { padding: 7rem 4rem; }
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+  .section-h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 4vw, 3.4rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    max-width: 700px;
+    margin-bottom: 1.5rem;
+  }
+  .section-body {
+    font-size: 1rem;
+    color: var(--muted);
+    max-width: 560px;
+    line-height: 1.75;
+  }
+
+  .problem-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-top: 5rem;
+    align-items: center;
+  }
+  .problem-cards { display: flex; flex-direction: column; gap: 1.2rem; }
+  .problem-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 1.6rem 2rem;
+    display: flex; gap: 1.4rem; align-items: flex-start;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .problem-card:hover { border-color: rgba(232,197,71,0.3); transform: translateX(6px); }
+  .problem-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+  .problem-card h3 { font-size: 0.95rem; font-weight: 500; margin-bottom: 0.4rem; }
+  .problem-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+  /* PET ID VISUAL */
+  .id-card-wrapper {
+    display: flex; justify-content: center; align-items: center;
+    position: relative;
+  }
+  .id-card {
+    background: var(--card);
+    border: 1px solid rgba(232,197,71,0.25);
+    padding: 2.2rem;
+    width: 340px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(232,197,71,0.1);
+  }
+  .id-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+  .id-chip {
+    width: 38px; height: 28px;
+    background: linear-gradient(135deg, #e8c547 0%, #c9a635 100%);
+    border-radius: 4px;
+    margin-bottom: 1.4rem;
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px;
+    padding: 4px;
+  }
+  .id-chip div { background: rgba(0,0,0,0.2); border-radius: 1px; }
+  .id-pet-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+  .id-breed {
+    font-size: 0.75rem;
+    color: var(--accent2);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1.4rem;
+  }
+  .id-fields { display: flex; flex-direction: column; gap: 0.7rem; }
+  .id-field {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 0.7rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.78rem;
+  }
+  .id-field:last-child { border-bottom: none; }
+  .id-field-key { color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+  .id-field-val { font-family: 'Space Mono', monospace; color: var(--accent); font-size: 0.75rem; }
+  .id-qr {
+    width: 56px; height: 56px;
+    background: var(--text);
+    margin-top: 1.4rem;
+    display: grid; grid-template-columns: repeat(7,1fr); gap: 2px;
+    padding: 6px;
+  }
+  .id-qr div { background: var(--bg); border-radius: 1px; }
+  .id-qr div.filled { background: #0a0c0e; }
+  .id-badge {
+    position: absolute; bottom: 2.2rem; right: 2.2rem;
+    background: var(--accent2);
+    color: #0a0c0e;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.6rem;
+  }
+  .id-glow {
+    position: absolute; inset: -40px;
+    background: radial-gradient(ellipse at center, rgba(232,197,71,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* HOW IT WORKS */
+  .how-section { background: var(--surface); }
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: 4rem;
+    position: relative;
+  }
+  .steps::before {
+    content: '';
+    position: absolute; top: 2.5rem; left: 12.5%; right: 12.5%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent);
+    z-index: 0;
+  }
+  .step {
+    padding: 2rem 2rem;
+    position: relative; z-index: 1;
+    text-align: center;
+    transition: transform 0.2s;
+  }
+  .step:hover { transform: translateY(-8px); }
+  .step-num {
+    width: 52px; height: 52px;
+    background: var(--card);
+    border: 1px solid rgba(232,197,71,0.4);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--accent);
+    margin: 0 auto 1.5rem;
+  }
+  .step-icon { font-size: 1.6rem; margin-bottom: 1rem; }
+  .step h3 { font-size: 0.98rem; font-weight: 600; margin-bottom: 0.5rem; }
+  .step p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+
+  /* FEATURES */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5px;
+    margin-top: 4rem;
+    background: var(--border);
+  }
+  .feature-cell {
+    background: var(--bg);
+    padding: 2.6rem;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .feature-cell:hover { background: var(--card); }
+  .feature-cell::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+    transform-origin: left;
+  }
+  .feature-cell:hover::before { transform: scaleX(1); }
+  .feature-icon { font-size: 2rem; margin-bottom: 1.2rem; }
+  .feature-cell h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.7rem;
+  }
+  .feature-cell p { font-size: 0.85rem; color: var(--muted); line-height: 1.65; }
+
+  /* TESTIMONIALS */
+  .test-section { background: var(--surface); }
+  .test-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 4rem;
+  }
+  .test-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    position: relative;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .test-card:hover { transform: translateY(-5px); border-color: rgba(232,197,71,0.2); }
+  .test-quote {
+    font-size: 3rem;
+    color: var(--accent);
+    font-family: 'Playfair Display', serif;
+    line-height: 1;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+  .test-text { font-size: 0.88rem; color: var(--muted); line-height: 1.7; margin-bottom: 1.5rem; }
+  .test-author { display: flex; align-items: center; gap: 0.9rem; }
+  .test-avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.9rem; color: #0a0c0e;
+  }
+  .test-name { font-size: 0.85rem; font-weight: 600; }
+  .test-role { font-size: 0.75rem; color: var(--muted); }
+
+  /* CTA */
+  .cta-section {
+    padding: 8rem 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(232,197,71,0.08) 0%, transparent 70%);
+  }
+  .cta-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 5vw, 5rem);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  .cta-section h2 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+  .cta-section p {
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 500px;
+    margin: 0 auto 3rem;
+    line-height: 1.7;
+    position: relative;
+  }
+  .cta-form {
+    display: flex; gap: 0; max-width: 480px; margin: 0 auto;
+    position: relative;
+  }
+  .cta-input {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-right: none;
+    padding: 1rem 1.4rem;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .cta-input:focus { border-color: var(--accent); }
+  .cta-input::placeholder { color: var(--muted); }
+  .cta-btn {
+    background: var(--accent);
+    color: #0a0c0e;
+    border: none;
+    padding: 1rem 1.8rem;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    cursor: none;
+    white-space: nowrap;
+    transition: box-shadow 0.2s;
+  }
+  .cta-btn:hover { box-shadow: 0 6px 30px rgba(232,197,71,0.4); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 3rem 4rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .footer-links { display: flex; gap: 2rem; }
+  .footer-links a {
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--accent); }
+  .footer-copy { font-size: 0.75rem; color: var(--muted); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes lineReveal {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  .id-card { animation: float 5s ease-in-out infinite; }
+
+  /* Reveal on scroll */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s, transform 0.7s;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Live indicator */
+  .live-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: var(--accent2);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+    margin-right: 0.5rem;
+  }
+
+  /* Mobile */
+  @media (max-width: 900px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { padding: 8rem 1.5rem 4rem; }
+    .section { padding: 4rem 1.5rem; }
+    .problem-grid { grid-template-columns: 1fr; }
+    .id-card-wrapper { display: none; }
+    .steps { grid-template-columns: 1fr 1fr; }
+    .steps::before { display: none; }
+    .features-grid { grid-template-columns: 1fr; }
+    .test-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+    .cta-form { flex-direction: column; }
+    .cta-input { border-right: 1px solid var(--border); }
+    .hero-stats { flex-wrap: wrap; gap: 2rem; }
+  }
+</style>
 </head>
 <body>
 
-  <!-- ── NAVIGATION ── -->
-  <nav id="navbar">
-    <div class="nav-logo">
-      <span class="paw">🐾</span>
-      <span class="brand-name">PetOlife</span>
-    </div>
-    <div class="nav-links">
-      <a href="#problem">The Problem</a>
-      <a href="#features">Features</a>
-      <a href="#how">How It Works</a>
-      <a href="#cta" class="nav-cta">Get Early Access</a>
-    </div>
-    <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu">☰</button>
-  </nav>
+<!-- Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
 
-  <!-- Mobile Menu -->
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="#problem">The Problem</a>
-    <a href="#features">Features</a>
-    <a href="#how">How It Works</a>
-    <a href="#cta">Get Early Access</a>
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Pet<span>Olife</span></div>
+  <ul class="nav-links">
+    <li><a href="#problem">The Problem</a></li>
+    <li><a href="#how">How it Works</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#waitlist">Early Access</a></li>
+  </ul>
+  <button class="nav-cta">Join Waitlist</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-tag"><span class="live-dot"></span>Launching in Chennai, India</div>
+  <h1 class="hero-h1">One Identity.<br>Every <em>Pet</em>. Forever.</h1>
+  <p class="hero-sub">India's first Unified Pet Identity Protocol — a single, trusted digital record connecting every pet to their full health story, their vet, and their family.</p>
+  <div class="hero-actions">
+    <button class="btn-primary" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Claim Your Pet's ID</button>
+    <button class="btn-ghost" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">See How It Works →</button>
   </div>
-
-  <!-- ── HERO ── -->
-  <section class="hero" id="hero">
-    <div class="hero-bg"></div>
-
-    <div class="badge">
-      <div class="badge-dot"></div>
-      Now in Early Access
+  <div class="hero-stats">
+    <div>
+      <div class="stat-num">38M+</div>
+      <div class="stat-label">Pets in India</div>
     </div>
-
-    <p class="hero-eyebrow">Unified Pet Identity Platform</p>
-
-    <h1>Every pet deserves<br/>a <em>digital identity</em></h1>
-
-    <p class="hero-sub">
-      PetOlife is building the world's first unified pet identity — one secure profile that connects parents, vets, shelters, and care providers across a pet's entire life.
-    </p>
-
-    <div class="hero-actions">
-      <a href="#cta" class="btn btn-primary">Create Your Pet's Profile →</a>
-      <a href="#problem" class="btn btn-secondary">See Why It Matters</a>
+    <div>
+      <div class="stat-num">0</div>
+      <div class="stat-label">Unified Platforms</div>
     </div>
-
-    <div class="floating-cards" id="floatingCards">
-      <!-- Injected by js/pets.js -->
+    <div>
+      <div class="stat-num">∞</div>
+      <div class="stat-label">Records Lost Per Year</div>
     </div>
-  </section>
-
-  <!-- ── TRUST STRIP ── -->
-  <div class="trust-strip" id="trustStrip">
-    <!-- Injected by js/trust.js -->
   </div>
+</section>
 
-  <!-- ── PROBLEM ── -->
-  <section id="problem" class="section-alt">
-    <div class="section-inner">
-      <div class="problem-grid">
-        <div class="problem-text">
-          <p class="section-label reveal">The Problem</p>
-          <h2 class="reveal">Pet care is <em>fragmented</em></h2>
-          <p class="section-lead reveal">Your pet's records are scattered across notebooks, WhatsApp messages, old clinic files, and faded vaccination cards.</p>
-          <div class="chaos-cards" id="chaosCards">
-            <!-- Injected by js/problems.js -->
-          </div>
-        </div>
-        <div class="problem-stats reveal" id="statsBox">
-          <!-- Injected by js/stats.js -->
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track" id="marquee"></div>
+</div>
+
+<!-- PROBLEM -->
+<section class="section" id="problem">
+  <div class="problem-grid">
+    <div>
+      <p class="section-tag">// The Problem</p>
+      <h2 class="section-h2 reveal">Pet care in India is broken by fragmentation.</h2>
+      <p class="section-body reveal">Every visit to a new vet starts from scratch. Vaccination records live on paper slips. Emergency decisions get made without history. The system fails pets — not because of lack of care, but lack of infrastructure.</p>
+    </div>
+    <div class="problem-cards">
+      <div class="problem-card reveal">
+        <div class="problem-icon">📋</div>
+        <div>
+          <h3>No Unified Health Record</h3>
+          <p>Each vet visit is a fresh start. Critical history — allergies, past treatments, chronic conditions — gets repeated, misremembered, or lost.</p>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- ── FEATURES ── -->
-  <section id="features" class="section-default">
-    <div class="section-inner">
-      <p class="section-label reveal">The Solution</p>
-      <h2 class="reveal">One ID. A lifetime of <em>care</em>.</h2>
-      <p class="section-lead reveal">PetOlife creates a living digital profile for your pet — accessible to every trusted person in their care circle, always up to date, always secure.</p>
-      <div class="features-grid" id="featuresGrid">
-        <!-- Injected by js/features.js -->
+      <div class="problem-card reveal">
+        <div class="problem-icon">🗺️</div>
+        <div>
+          <h3>Fragmented Discovery</h3>
+          <p>Pet parents spend precious time searching for trustworthy vets, groomers, and emergency care in moments of panic. No reliable system exists.</p>
+        </div>
       </div>
-    </div>
-  </section>
-
-  <!-- ── ID CARD DEMO ── -->
-  <section id="demo" class="section-demo">
-    <div class="section-inner">
-      <div class="id-demo-bg">
-        <div class="id-demo-inner">
-          <div class="id-demo-text">
-            <p class="section-label">Live Demo</p>
-            <h2>A pet's entire life,<br/>in one <em>card</em></h2>
-            <p class="section-lead">The PetOlife ID is the world's first standardized digital credential for pets — readable by any participating vet clinic in seconds.</p>
-            <a href="#cta" class="btn btn-amber" style="margin-top:1rem;">Create Your Pet's ID →</a>
-          </div>
-          <div class="id-card-wrapper" id="petIdCard">
-            <!-- Injected by js/idcard.js -->
-          </div>
+      <div class="problem-card reveal">
+        <div class="problem-icon">🔍</div>
+        <div>
+          <h3>Zero Identity Infrastructure</h3>
+          <p>Unlike humans, pets have no formal digital identity. They cannot be identified, verified, or tracked across providers — creating care gaps at every transition.</p>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ── HOW IT WORKS ── -->
-  <section id="how" class="section-alt">
-    <div class="section-inner">
-      <p class="section-label reveal">How It Works</p>
-      <h2 class="reveal">Simple for owners,<br/><em>powerful</em> for vets</h2>
-      <p class="section-lead reveal">PetOlife is designed for zero friction on day one — no training required, no new hardware, no complex onboarding.</p>
-      <div class="how-steps" id="howSteps">
-        <!-- Injected by js/how.js -->
+<!-- PET ID SHOWCASE -->
+<section class="section" style="background: var(--surface);" id="identity">
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;">
+    <div class="id-card-wrapper">
+      <div class="id-glow"></div>
+      <div class="id-card">
+        <div class="id-chip">
+          <div></div><div></div><div></div>
+          <div></div><div></div><div></div>
+          <div></div><div></div><div></div>
+        </div>
+        <div class="id-pet-name">Bruno</div>
+        <div class="id-breed">Golden Retriever • Male • 3 yrs</div>
+        <div class="id-fields">
+          <div class="id-field"><span class="id-field-key">Pet ID</span><span class="id-field-val">PET-IN-CHN-00421</span></div>
+          <div class="id-field"><span class="id-field-key">Vaccinations</span><span class="id-field-val">✓ Up to Date</span></div>
+          <div class="id-field"><span class="id-field-key">Primary Vet</span><span class="id-field-val">Dr. Priya Rajan</span></div>
+          <div class="id-field"><span class="id-field-key">Last Visit</span><span class="id-field-val">Apr 28, 2026</span></div>
+          <div class="id-field"><span class="id-field-key">Blood Group</span><span class="id-field-val">DEA 1.1+</span></div>
+        </div>
+        <div class="id-qr" id="qr"></div>
+        <div class="id-badge">Verified ✓</div>
       </div>
     </div>
-  </section>
-
-  <!-- ── TESTIMONIALS ── -->
-  <section class="section-default">
-    <div class="section-inner">
-      <p class="section-label reveal">Early Voices</p>
-      <h2 class="reveal">Pet parents & vets <em>both love it</em></h2>
-      <div class="testimonials-grid" id="testimonialsGrid">
-        <!-- Injected by js/testimonials.js -->
+    <div>
+      <p class="section-tag">// The Pet Identity Protocol</p>
+      <h2 class="section-h2 reveal">A permanent digital identity — from first vaccine to forever.</h2>
+      <p class="section-body reveal">The Pet Identity Protocol assigns every pet a unique, verifiable ID that travels with them. Across clinics. Across cities. Across their entire life. One scan unlocks the complete story.</p>
+      <div style="margin-top: 2.5rem; display: flex; flex-direction: column; gap: 1rem;" class="reveal">
+        <div style="display: flex; gap: 1rem; align-items: center; font-size: 0.9rem;">
+          <span style="color: var(--accent2); font-size: 1.2rem;">✓</span> Portable health records across all providers
+        </div>
+        <div style="display: flex; gap: 1rem; align-items: center; font-size: 0.9rem;">
+          <span style="color: var(--accent2); font-size: 1.2rem;">✓</span> QR-based instant verification by any vet
+        </div>
+        <div style="display: flex; gap: 1rem; align-items: center; font-size: 0.9rem;">
+          <span style="color: var(--accent2); font-size: 1.2rem;">✓</span> Emergency profile accessible in seconds
+        </div>
+        <div style="display: flex; gap: 1rem; align-items: center; font-size: 0.9rem;">
+          <span style="color: var(--accent2); font-size: 1.2rem;">✓</span> Lifetime continuity — one pet, one truth
+        </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ── CTA ── -->
-  <section id="cta" class="cta-section">
-    <h2>Your pet's story<br/>starts <em>here</em></h2>
-    <p>Join thousands of pet parents giving their animals the digital identity they deserve. Free during early access.</p>
-    <div class="cta-actions">
-      <a href="#" class="btn btn-amber">Create a Free Pet Profile →</a>
-      <a href="#" class="btn btn-ghost">I'm a Vet — Join the Network</a>
+<!-- HOW IT WORKS -->
+<section class="section how-section" id="how">
+  <p class="section-tag" style="text-align:center;">// How It Works</p>
+  <h2 class="section-h2 reveal" style="text-align:center; margin:0 auto 0.5rem;">Four steps. One lifetime of care.</h2>
+  <div class="steps">
+    <div class="step reveal">
+      <div class="step-num">01</div>
+      <div class="step-icon">🐾</div>
+      <h3>Register Your Pet</h3>
+      <p>Create a free pet profile in under 2 minutes. Add basic details, breed, and a photo to generate a unique Pet Identity.</p>
     </div>
-  </section>
+    <div class="step reveal">
+      <div class="step-num">02</div>
+      <div class="step-icon">🏥</div>
+      <h3>Connect Your Vet</h3>
+      <p>Link to any registered PetOlife vet. All future visits, prescriptions, and diagnoses sync automatically to the identity.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">03</div>
+      <div class="step-icon">📱</div>
+      <h3>Carry the QR</h3>
+      <p>Your pet's identity lives on a scannable QR. Share it instantly in emergencies, boarding, or travel — anywhere, anytime.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">04</div>
+      <div class="step-icon">♾️</div>
+      <h3>Build a Lifetime Record</h3>
+      <p>Every visit, vaccine, medication, and milestone enriches the identity — building the most complete pet health record in India.</p>
+    </div>
+  </div>
+</section>
 
-  <!-- ── FOOTER ── -->
-  <footer>
-    <div class="footer-top">
-      <div class="logo">🐾 PetOlife</div>
-      <div class="footer-links">
-        <a href="#">Privacy</a>
-        <a href="#">Terms</a>
-        <a href="#">For Vets</a>
-        <a href="#">Contact</a>
-        <a href="#">Blog</a>
+<!-- FEATURES -->
+<section class="section" id="features">
+  <p class="section-tag">// Built for the Ecosystem</p>
+  <h2 class="section-h2 reveal">Infrastructure for pet parents and vets alike.</h2>
+  <div class="features-grid">
+    <div class="feature-cell reveal">
+      <div class="feature-icon">🔐</div>
+      <h3>Secure by Design</h3>
+      <p>Pet health data is encrypted at rest and in transit. Owners control who sees what — always. Your pet's records are yours.</p>
+    </div>
+    <div class="feature-cell reveal">
+      <div class="feature-icon">⚡</div>
+      <h3>Instant Emergency Profile</h3>
+      <p>One scan in a crisis gives any vet blood type, allergies, medications, and contacts — no login required in emergencies.</p>
+    </div>
+    <div class="feature-cell reveal">
+      <div class="feature-icon">🗓️</div>
+      <h3>Smart Reminders</h3>
+      <p>Never miss a vaccine, deworming, or annual check-up. Intelligent reminders based on your pet's actual health schedule.</p>
+    </div>
+    <div class="feature-cell reveal">
+      <div class="feature-icon">🩺</div>
+      <h3>Vet Network Access</h3>
+      <p>Find trusted, verified veterinarians near you — filtered by specialty, rating, and availability. Built for trust, not just proximity.</p>
+    </div>
+    <div class="feature-cell reveal">
+      <div class="feature-icon">📊</div>
+      <h3>Health Timeline</h3>
+      <p>A chronological view of your pet's complete medical history. Spot patterns, track progress, and make informed decisions.</p>
+    </div>
+    <div class="feature-cell reveal">
+      <div class="feature-icon">🏙️</div>
+      <h3>City-Wide Coverage</h3>
+      <p>Starting in Chennai, expanding across India. One protocol that works whether you're in your neighbourhood or cross-country.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section test-section">
+  <p class="section-tag" style="text-align:center;">// Early Believers</p>
+  <h2 class="section-h2 reveal" style="text-align:center; margin: 0 auto 0.5rem;">What pet parents are saying.</h2>
+  <div class="test-grid">
+    <div class="test-card reveal">
+      <div class="test-quote">"</div>
+      <p class="test-text">When Simba had an allergic reaction while I was traveling, the emergency vet scanned his QR and had his full history in seconds. PetOlife literally saved his life.</p>
+      <div class="test-author">
+        <div class="test-avatar">R</div>
+        <div><div class="test-name">Riya S.</div><div class="test-role">Cat parent, Bengaluru</div></div>
       </div>
     </div>
-    <p class="footer-copy">© 2026 PetOlife Technologies Pvt. Ltd. · Built with love for pets and their people.</p>
-  </footer>
+    <div class="test-card reveal">
+      <div class="test-quote">"</div>
+      <p class="test-text">As a vet, context is everything. With PetOlife I get the full picture before the pet even walks into my clinic. It changes the quality of every consultation.</p>
+      <div class="test-author">
+        <div class="test-avatar">D</div>
+        <div><div class="test-name">Dr. Deepak M.</div><div class="test-role">Veterinarian, Chennai</div></div>
+      </div>
+    </div>
+    <div class="test-card reveal">
+      <div class="test-quote">"</div>
+      <p class="test-text">I moved from Mumbai to Chennai with my two dogs. Usually this means starting over with every vet. With PetOlife, their entire history came with us.</p>
+      <div class="test-author">
+        <div class="test-avatar">A</div>
+        <div><div class="test-name">Anand K.</div><div class="test-role">Dog parent, Chennai</div></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <!-- Scripts (order matters) -->
-  <script src="js/data.js"></script>
-  <script src="js/components.js"></script>
-  <script src="js/render.js"></script>
-  <script src="js/nav.js"></script>
-  <script src="js/animations.js"></script>
-  <script src="js/main.js"></script>
+<!-- CTA -->
+<section class="cta-section" id="waitlist">
+  <h2 class="reveal">Your pet deserves a<br><em>real identity.</em></h2>
+  <p class="reveal">Join the waitlist. Be among the first families to give their pet a permanent digital identity — and the continuity of care they deserve.</p>
+  <div class="cta-form reveal">
+    <input class="cta-input" type="email" placeholder="your@email.com" id="emailInput">
+    <button class="cta-btn" onclick="handleWaitlist()">Claim Free ID</button>
+  </div>
+  <p style="margin-top: 1.2rem; font-size: 0.78rem; color: var(--muted);" id="waitlistMsg"></p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">PetOlife</div>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#">Contact</a>
+    <a href="https://linkedin.com/company/petolife" target="_blank">LinkedIn</a>
+  </div>
+  <div class="footer-copy">© 2026 PetOlife. Chennai, India. 🐾</div>
+</footer>
+
+<script>
+// Cursor
+const cursor = document.getElementById('cursor');
+const cursorRing = document.getElementById('cursorRing');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+  setTimeout(() => {
+    cursorRing.style.left = e.clientX + 'px';
+    cursorRing.style.top = e.clientY + 'px';
+  }, 80);
+});
+
+// Reveal on scroll
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// QR pattern
+const qr = document.getElementById('qr');
+if (qr) {
+  const pattern = [1,1,1,0,1,1,1, 1,0,1,0,1,0,1, 1,0,1,1,1,0,1, 0,0,0,1,0,0,0, 1,1,0,1,0,1,1, 1,0,1,0,1,0,0, 0,1,0,1,1,1,0];
+  pattern.forEach(v => {
+    const d = document.createElement('div');
+    if (v) d.classList.add('filled');
+    qr.appendChild(d);
+  });
+}
+
+// Marquee
+const marqueeItems = ['Unified Pet Identity','Lifetime Health Records','QR Emergency Access','Vet Network','Smart Reminders','Secure & Private','Trusted Infrastructure','Pet Parent First'];
+const track = document.getElementById('marquee');
+[...marqueeItems, ...marqueeItems].forEach(t => {
+  const el = document.createElement('div');
+  el.className = 'marquee-item';
+  el.textContent = t;
+  track.appendChild(el);
+});
+
+// Waitlist
+function handleWaitlist() {
+  const val = document.getElementById('emailInput').value;
+  const msg = document.getElementById('waitlistMsg');
+  if (!val || !val.includes('@')) {
+    msg.style.color = 'var(--accent3)';
+    msg.textContent = 'Please enter a valid email address.';
+    return;
+  }
+  msg.style.color = 'var(--accent2)';
+  msg.textContent = '🐾 You\'re on the list! We\'ll be in touch soon.';
+  document.getElementById('emailInput').value = '';
+}
+
+// Counter animation
+function animateCounters() {
+  // already static for performance
+}
+
+// Staggered card animation on scroll
+document.querySelectorAll('.problem-card, .step, .feature-cell, .test-card').forEach((el, i) => {
+  el.style.transitionDelay = (i % 3) * 0.1 + 's';
+});
+</script>
 </body>
 </html>
